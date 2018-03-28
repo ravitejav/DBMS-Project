@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+</head>
+<body>
+  <form class="" action="/log/admin/login" method="POST" style="padding:100px">
+    {% csrf_token %}
+  <center>
+    <input type="text" name="username" value="" placeholder="username" required="required"><br><br>
+    <input type="password" name="passa" value="" placeholder="Password" required="required"><br><br>
+    <input type="submit" name="Login" value="Log In">
+  </center>
+  </form>
+</body>
+</html>

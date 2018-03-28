@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -115,6 +116,14 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+PROJECT_DIR = os.path.dirname(os.path.dirname((os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+STATICFILES_DIRS = [ os.path.join(PROJECT_DIR, 'static'), ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
