@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page | Admin</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
+</head>
+<body>
+    <nav class="admin-nav">
+        <ul>
+            <li><a href="/log/admin/login/addstd">Add Student</a></li>
+            <li><a href="/log/admin/login/updatestd">Update Student</a></li>
+            <li><a href="">Add Notification</a></li>
+            <li><a href="">Update Notification</a></li>
+            <li><a href="">View Fee Details</a></li>
+            <li><a href="">Log Out</a></li>
+            <li><a href="#" class="text-right">Hello, {{ name }}</a></li>
+        </ul>
+    </nav>
+
+</body>
+</html>

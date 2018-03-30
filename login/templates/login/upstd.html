@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Student</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
+</head>
+<body>
+    <nav class="admin-nav">
+      <ul>
+          <li><a href="/log/admin/login/addstd">Add Student</a></li>
+          <li><a href="/log/admin/login/updatestd">Update Student</a></li>
+          <li><a href="">Add Notification</a></li>
+          <li><a href="">Update Notification</a></li>
+          <li><a href="">View Fee Details</a></li>
+          <li><a href="">Log Out</a></li>
+          <li><a href="#" class="text-right">Hello, {{ name }}</a></li>
+      </ul>
+  </nav>
+  <form class="example" action="/log/admin/updatesearch" method="POST" style="padding:100px">
+  {% csrf_token %}
+    <input type="text" placeholder="Please enter student register id to update details..." name="search">
+    <button type="submit"><i class="fa fa-search"></i></button>
+  </form>
+</body>
+</html>

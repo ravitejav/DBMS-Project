@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Details</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
+</head>
+<body>
+    <nav class="admin-nav">
+      <ul>
+          <li><a href="/log/admin/login/addstd">Add Student</a></li>
+          <li><a href="/log/admin/login/updatestd">Update Student</a></li>
+          <li><a href="">Add Notification</a></li>
+          <li><a href="">Update Notification</a></li>
+          <li><a href="">View Fee Details</a></li>
+          <li><a href="">Log Out</a></li>
+          <li><a href="#" class="text-right">Hello, {{ name }}</a></li>
+      </ul>
+  </nav>
+  <center>
+  <form style="max-width:800px;padding:100px" action="/log/admin/updatestd" method="POST">
+{% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <input type="text" class="form-control" id="FirstName" placeholder="Name" name="name" required="required" value="{{ namea }}" readonly>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" id="FirstName" placeholder="Father Name" name="father_name" required="required" value="{{ pass }}" readonly>
+      </div>
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" id="SecondName" placeholder="Mother Name" name="mother_name" required="required" value="{{ father }}" readonly>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <select class="form-control" id="inputEmail4" name="gender">
+          <option value="m">Male</option>
+          <option value="f">Female</option>
+        </select>
+      </div>
+      <div class="form-group col-md-6">
+        <input type="text" class="form-control" id="inputPassword4" placeholder="Phone Number" name="phone" required="required" value="{{ phone }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" required="required" value="{{ email }}">
+      </div>
+      <div class="form-group col-md-6">
+        <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="passa" required="required" value="{{ mother }}" readonly>
+      </div>
+    </div>
+    <div class="form-row col-md-12 form-group">
+      <input type="text" class="form-control" id="inputAddress" placeholder="Permanent Address" name="per_add" required="required" value="{{ p_add }}">
+    </div>
+    <div class="form-row col-md-12 form-group">
+      <input type="text" class="form-control" id="inputAddress2" placeholder="Temporary Address" name="temp_add" required="required"  value="{{ t_add }}">
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" id="FirstName" placeholder="Register Number" name="regno" required="required" value="{{ regno }}" readonlys>
+      </div>
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" id="SecondName" placeholder="Admission Number" name="add_no" required="required" value="{{ add_no }}" readonly>
+      </div>
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" id="SecondName" placeholder="Fee" name="fee" required="required" value="{{ fee }}" readonly>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" id="FirstName" placeholder="Year" name="year" required="required" value="{{ year }}">
+      </div>
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" id="SecondName" placeholder="Semester" name="sem" required="required" value="{{ sem }}">
+      </div>
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control" id="SecondName" placeholder="Branch" name="branch" required="required" value="{{ branch }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" id="FirstName" placeholder="10th Result" name="ten_res" required="required" value="{{ ten_res }}" readonly>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" id="SecondName" placeholder="12th Result" name="puc_res" required="required" value="{{ puc_res }}" readonly>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" id="SecondName" placeholder="CET Rank" name="rank" required="required" value="{{ rank }}" readonly>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" id="SecondName" placeholder="Academic Year" name="a_year" required="required" value="{{ a_year }}" readonly>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Student</button>
+  </form>
+</center>
+</body>
+</html>

@@ -8,4 +8,9 @@ urlpatterns = [
     url(r'^admin/$', views.adminlog, name='adminlog'),
     url(r'^student/$', views.studentlog, name='studentlog'),
     url(r'^admin/login$', views.adminlogin, name='adminlogin'),
+    url(r'^admin/login/addstd', views.addstd, name='addstd'),
+    url(r'^admin/login/updatestd', views.updatestd, name='updatestd'),
+    url(r'^admin/addstd', views.addstddb, name='addstddb'),
+    url(r'^admin/updatesearch', views.upsearch, name='upsearch'),
+    url(r'^admin/updatestd', views.updatestddone, name='updatestddone'),
 ]

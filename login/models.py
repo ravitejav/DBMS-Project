@@ -3,7 +3,7 @@ from django.db import models
 
 class User(models.Model):
     name = models.CharField(max_length=120)
-    password = models.CharField(max_length=60)
+    pass_word = models.CharField(max_length=60)
     father_name = models.CharField(max_length=120)
     mother_name = models.CharField(max_length=120)
     year = models.IntegerField()
@@ -20,6 +20,7 @@ class User(models.Model):
     Temp_address = models.CharField(max_length=800)
     per_address = models.CharField(max_length=800)
     studying_year = models.CharField(max_length=9)
+    gender = models.CharField(max_length=1)
 
     def __str__(self):
         return self.reg_no
