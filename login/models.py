@@ -71,6 +71,9 @@ class Defuser(models.Model):
     def __str__(self):
         return str(self.user_id)
 
+    def ret(self):
+        return self.user_id
+
 class Notif(models.Model):
     added_date = models.DateField()
     expiry_date = models.DateField()

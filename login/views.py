@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import User, Notif, Fee_pay, Compliant, Comp_match, Paying, Defuser
 from django.db import connection
-
+from datetime import datetime
 
 app_name = 'login'
 
@@ -15,12 +15,8 @@ def adminlog(request):
     return render(request, 'login/admin.html')
 
 def adminlogin(request):
-    if(request.session['username']):
-        password = request.session['passa']
-        name = request.session['username']
-    else:
-        name = str(request.POST.get('username'))
-        password = str(request.POST.get('passa'))
+    name = str(request.POST.get('username'))
+    password = str(request.POST.get('passa'))
     cursor = connection.cursor()
     query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
     cursor.execute(query)
@@ -36,6 +32,24 @@ def adminlogin(request):
 
 def studentlog(request):
     return render(request, 'login/student.html')
+
+def addnoti(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        name = str(request.POST.get('username'))
+        password = str(request.POST.get('passa'))
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    row2 = list(row)
+    count = int(len(row))
+    if (count == 1):
+        return render(request, 'login/addnoti.html', {'name': request.session.get("username")})
+    else:
+        return render(request, 'login/admin.html')
 
 def addstd(request):
     if (request.session['username']):
@@ -195,3 +209,70 @@ def updatestddone(request):
             return render(request, 'login/addstd.html', {'name': name, 'error': "Fill all details and submit"})
     else:
         return render(request, 'login/admin.html')
+
+def addnotification(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        return render(request, 'login/admin.html')
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    row2 = list(row)
+    count = int(len(row))
+    if (count == 1):
+        cursor1 = connection.cursor()
+        newnoti = Notif()
+        myDate = datetime.now()
+        newnoti.added_date = myDate.strftime("%Y-%m-%d")
+        newnoti.expiry_date = str(request.POST.get('ex_date'))
+        newnoti.posted_by_id = Defuser.objects.only('user_id').get(user_id=row[0][2])
+        newnoti.head = str(request.POST.get('subject'))
+        newnoti.data =str(request.POST.get('noti'))
+        return render(request, 'login/addnoti.html', {'error_message':"", 'name': request.session.get("username")})
+    else:
+        return render(request, 'login/admin.html')
+
+def fee(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        return render(request, 'login/admin.html')
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    row2 = list(row)
+    count = int(len(row))
+    if (count == 1):
+        return render(request, 'login/fee.html', {'name': request.session.get("username")})
+    else:
+        return render(request, 'login/admin.html')
+
+def feefetch(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        return render(request, 'login/admin.html')
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        query1 = "SELECT * FROM login_fee_pay WHERE trans_id in (SELECT pay_id_id FROM login_paying WHERE std_id_id='" + str(request.POST.get('search')) + "')"
+        cursor2 = connection.cursor()
+        cursor2.execute(query1)
+        row2 = cursor2.fetchall()
+        return render(request, 'login/feefetch.html', {'name': request.session.get("username"), 'data':row2})
+    else:
+        return render(request, 'login/admin.html')
+
+def logout(request):
+    del request.session['username']
+    del request.session['passa']
+    return render(request, 'login/admin.html')
