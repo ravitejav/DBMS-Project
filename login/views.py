@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
@@ -8,8 +8,15 @@ from datetime import datetime
 
 app_name = 'login'
 
+#admin functions here
+
+
 def index(request):
-    return render(request, 'login/login.html')
+    query1 = "SELECT added_date,expiry_date,posted_by_id_id,data,head,user_name FROM login_notif,login_defuser WHERE expiry_date >= '" + datetime.now().strftime("%Y-%m-%d") + "' AND user_id=posted_by_id_id"
+    cursor2 = connection.cursor()
+    cursor2.execute(query1)
+    row2 = cursor2.fetchall()
+    return render(request, 'login/login.html', {'data':row2})
 
 def adminlog(request):
     return render(request, 'login/admin.html')
@@ -276,3 +283,103 @@ def logout(request):
     del request.session['username']
     del request.session['passa']
     return render(request, 'login/admin.html')
+
+#student functions here
+
+def stdlogin(request):
+    name = str(request.POST.get('username'))
+    password = str(request.POST.get('passa'))
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        request.session['name_std'] = row[0][0]
+        request.session['user_std'] = name
+        request.session['pass_std'] = password
+        return render(request, 'login/std_logged.html', {'name': row[0][0]})
+    else:
+        return HttpResponseRedirect("/log")
+
+
+def stdlogout(request):
+    del request.session['name_std']
+    del request.session['user_std']
+    del request.session['pass_std']
+    return HttpResponseRedirect('/log/')
+
+def addcomp(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        return render(request, 'login/comp.html', {'name': row[0][0]})
+    else:
+        return HttpResponseRedirect("/log")
+
+def addstdcomp(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        newcomp =Compliant()
+        newcomp.about = str(request.POST.get('about'))
+        newcomp.sub = str(request.POST.get('subject'))
+        newcomp.explain = str(request.POST.get('data'))
+        newcomp.add_date = datetime.now().strftime("%Y-%m-%d")
+        newcomp.save()
+        newreg = Comp_match()
+        newreg.match_id = Compliant.objects.only('comp_id').get(comp_id=newcomp.comp_id)
+        newreg.regno = User.objects.only('reg_no').get(reg_no=row[0][9])
+        newreg.save()
+        return render(request, 'login/comp.html', {'name': row[0][0]})
+    else:
+        return HttpResponseRedirect("/log")
+
+def dopayment(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        return render(request, 'login/payment.html', {'name': row[0][0]})
+    else:
+        return HttpResponseRedirect("/log")
+
+def donepayment(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        newfee = Fee_pay()
+        newfee.card_no = str(request.POST.get('card'))
+        newfee.fee_paid = str(request.POST.get('amt'))
+        newfee.paid_date = datetime.now().strftime("%Y-%m-%d")
+        newfee.save()
+        var = newfee.trans_id
+        newfeed = Paying()
+        newfeed.pay_id = Fee_pay.objects.only('trans_id').get(trans_id=var)
+        newfeed.std_id = User.objects.only('reg_no').get(reg_no=row[0][9])
+        newfeed.save()
+        query = "UPDATE login_user SET fee=" + str(int(row[0][12])-int(newfee.fee_paid)) + " WHERE reg_no='" + row[0][9]+ "'"
+        cursor1 = connection.cursor()
+        cursor1.execute(query)
+        return render(request, 'login/paying.html', {'var':row[0][9]})
+    else:
+        return HttpResponseRedirect("/log")

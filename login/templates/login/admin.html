@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Login</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
 </head>
 <body>
-  <form class="" action="/log/admin/login" method="POST" style="padding:100px">
-    {% csrf_token %}
-  <center>
-    <input type="text" name="username" value="" placeholder="username" required="required"><br><br>
-    <input type="password" name="passa" value="" placeholder="Password" required="required"><br><br>
-    <input type="submit" name="Login" value="Log In">
-  </center>
-  </form>
+  <div class="container" style="max-width:600px;padding:100px">
+      <form class="form-signin" method="POST" action="/log/admin/login">
+      {% csrf_token %}
+        <h2 class="form-signin-heading">Adimn, Please sign in</h2>
+        <input type="text" id="inputEmail" class="form-control" placeholder="Username" name="username" required autofocus>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="passa"required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+    </div>
 </body>
 </html>

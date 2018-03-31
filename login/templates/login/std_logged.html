@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Home Page</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/stylestd.css' %}" />
+</head>
+<body>
+<div class="navbar">
+  <a href="#">Hello, {{ name }}</a>
+  <a href="/log/std/comp">Register Compliant</a>
+  <a href="/log/std/payment">Payment</a>
+  <a href="/log/std/logout">log out</a>
+</div>
+</body>
+</html>

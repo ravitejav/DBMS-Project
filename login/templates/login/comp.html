@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Compliant</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/stylestd.css' %}" />
+</head>
+<body>
+<div class="navbar">
+  <a href="#">Hello, {{ name }}</a>
+  <a href="/log/std/comp">Register Compliant</a>
+  <a href="/log/std/payment">Payment</a>
+  <a href="/log/std/logout">log out</a>
+</div>
+<h3>Complaint Form</h3>
+<center>
+  <div class="container">
+    <form action="/log/std/addcomp" method="POST" style="">
+  {% csrf_token %}
+      <input type="text" id="fname" name="about" placeholder="About what" required="required">
+      <input type="text" id="lname" name="subject" placeholder="Subject for complaint" required="required">
+      <textarea id="subject" name="data" placeholder="Write something about compliant with details.." style="height:200px" required="required"></textarea>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+</center>
+</body>
+</html>
