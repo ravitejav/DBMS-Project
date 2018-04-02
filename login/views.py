@@ -38,7 +38,7 @@ def adminlogin(request):
         return render(request, 'login/admin.html')
 
 def studentlog(request):
-    return render(request, 'login/student.html')
+    return HttpResponseRedirect('/log')
 
 def addnoti(request):
     if (request.session['username']):
@@ -105,32 +105,15 @@ def upsearch(request):
     row2 = list(row)
     count = int(len(row))
     if (count == 1):
-        newmap = {
-                    'name' : 'name',
-                    'father' : 'father_name',
-                    'mother' : 'mother_name',
-                    'pass' : 'pass_word',
-                    'year' : 'year',
-                    'sem' : 'sem',
-                    'branch' : 'branch',
-                    'add_no' : 'admission_number',
-                    'ten_res' : 'ten_res',
-                    'puc_res' : 'puc_res',
-                    'regno' : 'reg_no',
-                    'phone' : 'phone',
-                    'email' : 'email',
-                    'fee' : 'fee',
-                    'rank' : 'rank',
-                    't_add' : 'Temp_address',
-                    'p_add' : 'per_address',
-                    'a_year' : 'studying_year',
-                    'gender' : 'gender',
-        }
         cursor = connection.cursor()
         query = "SELECT name,father_name,mother_name,pass_word,year,sem,branch,admission_number,ten_res,puc_res,reg_no,phone,email,fee,rank,Temp_address,per_address,studying_year,gender FROM login_user WHERE reg_no='" + str(request.POST.get("search")) + "'"
         cursor.execute(query)
         row = cursor.fetchall()
-        return render(request, 'login/updatestd.html', {'name': name, 'row' : row, 'namea' : row[0][0],'pass' :  row[0][1],'father' :  row[0][2],'mother' :  row[0][3],'year' :  row[0][4],'sem' :  row[0][5],'branch' : row[0][6],'add_no' : row[0][7],'ten_res' : row[0][8],'puc_res' : row[0][9],'regno' : row[0][10],'phone' : row[0][11],'email' : row[0][12],'fee' : row[0][13],'rank' : row[0][14],'t_add' : row[0][15],'p_add' : row[0][16],'a_year' : row[0][17],'gender' : row[0][18]})
+        count = int(len(row))
+        if (count == 1):
+            return render(request, 'login/updatestd.html', {'name': name, 'row' : row, 'namea' : row[0][0],'pass' :  row[0][1],'father' :  row[0][2],'mother' :  row[0][3],'year' :  row[0][4],'sem' :  row[0][5],'branch' : row[0][6],'add_no' : row[0][7],'ten_res' : row[0][8],'puc_res' : row[0][9],'regno' : row[0][10],'phone' : row[0][11],'email' : row[0][12],'fee' : row[0][13],'rank' : row[0][14],'t_add' : row[0][15],'p_add' : row[0][16],'a_year' : row[0][17],'gender' : row[0][18]})
+        else:
+            return HttpResponseRedirect('/log/admin/addstd')
     else:
         return render(request, 'login/admin.html')
 
@@ -284,6 +267,54 @@ def logout(request):
     del request.session['passa']
     return render(request, 'login/admin.html')
 
+
+def viewcomp(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        return render(request, 'login/admin.html')
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        query1 = "SELECT match_id_id,regno_id,add_date,status,explain,about,sub,comp_id FROM login_compliant,login_comp_match,login_user WHERE reg_no=regno_id AND match_id_id=comp_id AND status!='Solved'"
+        cursor2 = connection.cursor()
+        cursor2.execute(query1)
+        row2 = cursor2.fetchall()
+        return render(request, 'login/newcomp.html', {'name': request.session.get("username"), 'data':row2})
+    else:
+        return render(request, 'login/admin.html')
+
+def updatecompsol(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        return render(request, 'login/admin.html')
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        query1 = "SELECT match_id_id FROM login_compliant,login_comp_match,login_user WHERE reg_no=regno_id AND match_id_id=comp_id AND status!='Solved'"
+        cursor2 = connection.cursor()
+        cursor2.execute(query1)
+        row2 = cursor2.fetchall()
+        forw = ""
+        for x in row2:
+            status = str(request.POST.get(str(x[0])))
+            query1 = "UPDATE login_compliant SET status='" + status + "' WHERE comp_id=" + str(x[0]) + " "
+            cursor2 = connection.cursor()
+            cursor2.execute(query1)
+        return HttpResponseRedirect('http://127.0.0.1:8000/log/admin/viewcomp')
+    else:
+        return render(request, 'login/admin.html')
+
+
 #student functions here
 
 def stdlogin(request):
@@ -298,7 +329,7 @@ def stdlogin(request):
         request.session['name_std'] = row[0][0]
         request.session['user_std'] = name
         request.session['pass_std'] = password
-        return render(request, 'login/std_logged.html', {'name': row[0][0]})
+        return render(request, 'login/std_logged.html', {'name': row[0][0], 'fee':row[0][12]})
     else:
         return HttpResponseRedirect("/log")
 
@@ -318,7 +349,7 @@ def addcomp(request):
     row = cursor.fetchall()
     count = int(len(row))
     if (count == 1):
-        return render(request, 'login/comp.html', {'name': row[0][0]})
+        return render(request, 'login/comp.html', {'name': row[0][0], 'fee':row[0][12]})
     else:
         return HttpResponseRedirect("/log")
 
@@ -336,12 +367,13 @@ def addstdcomp(request):
         newcomp.sub = str(request.POST.get('subject'))
         newcomp.explain = str(request.POST.get('data'))
         newcomp.add_date = datetime.now().strftime("%Y-%m-%d")
+        newcomp.status = "Not checked yet"
         newcomp.save()
         newreg = Comp_match()
         newreg.match_id = Compliant.objects.only('comp_id').get(comp_id=newcomp.comp_id)
         newreg.regno = User.objects.only('reg_no').get(reg_no=row[0][9])
         newreg.save()
-        return render(request, 'login/comp.html', {'name': row[0][0]})
+        return render(request, 'login/comp.html', {'name': row[0][0], 'fee':row[0][12]})
     else:
         return HttpResponseRedirect("/log")
 
@@ -354,7 +386,7 @@ def dopayment(request):
     row = cursor.fetchall()
     count = int(len(row))
     if (count == 1):
-        return render(request, 'login/payment.html', {'name': row[0][0]})
+        return render(request, 'login/payment.html', {'name': row[0][0], 'fee':row[0][12]})
     else:
         return HttpResponseRedirect("/log")
 
@@ -380,6 +412,61 @@ def donepayment(request):
         query = "UPDATE login_user SET fee=" + str(int(row[0][12])-int(newfee.fee_paid)) + " WHERE reg_no='" + row[0][9]+ "'"
         cursor1 = connection.cursor()
         cursor1.execute(query)
-        return render(request, 'login/paying.html', {'var':row[0][9]})
+        return render(request, 'login/paying.html', {'var':row[0][9], 'fee':row[0][12]})
+    else:
+        return HttpResponseRedirect("/log")
+
+def stdcomp(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        query1 = "SELECT match_id_id,regno_id,add_date,status,explain,about,sub,comp_id FROM login_compliant,login_comp_match,login_user WHERE reg_no='15GAEC9054' AND match_id_id=comp_id AND status!='Solved'"
+        cursor2 = connection.cursor()
+        cursor2.execute(query1)
+        row2 = cursor2.fetchall()
+        return render(request, 'login/complain.html', {'name': row[0][0],'data':row2, 'fee':row[0][12]})
+    else:
+        return HttpResponseRedirect("/log")
+
+def stdchange(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        return render(request, 'login/change.html', {'name': row[0][0], 'fee': row[0][12]})
+    else:
+        return HttpResponseRedirect("/log")
+
+def changedone(request):
+    name = request.session['user_std']
+    password = request.session['pass_std']
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_user WHERE reg_no='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        cur_pass = str(request.POST.get('current_password'))
+        new_pass = str(request.POST.get('new_password'))
+        con_pass = str(request.POST.get('confirm_password'))
+        if (password == cur_pass):
+            if new_pass == con_pass:
+                query1 = "UPDATE login_user SET pass_word='" + new_pass + "' WHERE reg_no='" + name + "'"
+                cursor1 = connection.cursor()
+                cursor1.execute(query1)
+                return render(request, 'login/change.html', {'name': row[0][0], 'fee': row[0][12], 'error1': "successfully changed"})
+            else:
+                return render(request, 'login/change.html', {'name': row[0][0], 'fee': row[0][12], 'error1': "new Passwords mismatch"})
+        else:
+            return render(request, 'login/change.html', {'name': row[0][0], 'fee': row[0][12], 'error1': "Current password is mismatched"})
     else:
         return HttpResponseRedirect("/log")

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compliants</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
+    <style>
+      .inputForm
+      {
+        -moz-border-radius:10px;
+        -webkit-border-radius: 10px;
+        -khtml-border-radius: 10px;
+        border-radius: 10px;
+        behavior:url("border-radius.htc");
+      }
+    </style>
+</head>
+<body>
+    <nav class="admin-nav">
+      <ul>
+          <li><a href="/log/admin/login/addstd">Add Student</a></li>
+          <li><a href="/log/admin/login/updatestd">Update Student</a></li>
+          <li><a href="/log/admin/login/addnoti">Add Notification</a></li>
+          <li><a href="/log/admin/login/fee">View Fee Details</a></li>
+          <li><a href="/log/admin/viewcomp">View Complaints</a></li>
+          <li><a href="/log/admin/logout">Log Out</a></li>
+          <li><a href="#" class="text-right">Hello, {{ name }}</a></li>
+      </ul>
+    </nav>
+<form style="padding:25px" action="/log/admin/solve" method="POST">
+  {% csrf_token %}
+<h1>Complaints  (if solved replace status as Solved)</h1>
+{% if data %}
+    {% for x in data %}
+        <article style="width:1200px">
+            <h2><a href="#">About {{ x.5 }}, {{ x.6 }}</a href=""></h2>
+            <div class="row">
+                <div class="group1 col-sm-6 col-md-6">
+                    <font color="blue">Added on:</font> {{ x.2 }}
+                </div>
+                <div class="group2 col-sm-6 col-md-6">
+                    <font color="blue">Complaint by:</font> {{ x.1 }}
+                    <font color="blue">Complaint ID:</font> {{ x.0 }}
+                </div>
+            </div>
+            <hr>
+            <p class="lead">{{ x.4 }}</p>
+            <hr>
+            <div id="RightColumn">
+              <input type="text"  class="inputForm" name="{{ x.0 }}" value="{{ x.3 }}" required="required"  style="width:500px;height:50px;edge:round">
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </article>
+    {% endfor %}
+    <button type="submit">Update Status</button>
+{% else %}
+  <p style="padding:100px"><strong><h2> No Complaints</h2> </strong> </p>
+{% endif %}
+</form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compliants</title>
+     {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login/stylestd.css' %}" />
+</head>
+<body>
+<div class="navbar">
+  <a href="#">Hello, {{ name }}</a>
+  <a href="/log/std/comp">Register Compliant</a>
+  <a href="/log/std/payment">Payment</a>
+  <a href="/log/std/viewcomp">View Complaints</a>
+  <a href="/log/std/change">change Password</a>
+  <a href="/log/std/logout">log out</a>
+{% if fee %}
+  <div><a href="#">You need to pay, {{ fee }}</a></div>
+{% endif %}
+</div>
+{% if data %}
+    <h1>Complaints given by you,</h1>
+    {% for x in data %}
+        <article style="width:1200px">
+            <h2><a href="#">About {{ x.5 }}, {{ x.6 }}</a href=""></h2>
+            <div class="row">
+                <div class="group1 col-sm-6 col-md-6">
+                    <font color="blue">Added on:</font> {{ x.2 }}
+                </div>
+                <div class="group2 col-sm-6 col-md-6">
+                    <font color="blue">Complaint ID:</font> {{ x.0 }}
+                </div>
+            </div>
+            <hr>
+            <p class="lead">{{ x.4 }}</p>
+            <hr>
+            <p>Status : {{ x.3 }}</p>
+            <br>
+            <br>
+            <br>
+            <br>
+        </article>
+    {% endfor %}
+{% else %}
+    <h1>You didn't gave any complaints</h1>
+{% endif %}
+</body>
+</html>

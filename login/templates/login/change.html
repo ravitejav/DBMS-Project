@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Home Page</title>
-    {% load staticfiles %}
+    <title>Change Password</title>
+     {% load staticfiles %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'login/stylestd.css' %}" />
 </head>
@@ -19,5 +19,19 @@
   <div><a href="#">You need to pay, {{ fee }}</a></div>
 {% endif %}
 </div>
+{% if error1 %}
+    <strong>
+        <font color="red">
+            <a href="#">{{ error1 }}</a>
+        </font>
+    </strong>
+{% endif %}
+<form class="" action="/log/std/changedone" method="POST">
+{% csrf_token %}
+<input type="password" name="current_password" placeholder="Old password" required><br><br>
+<input type="password" name="new_password" placeholder="New password" required><br><br>
+<input type="password" name="confirm_password" placeholder="Confirm password" required><br><br>
+<input type="submit" value="Change password">
+</form>
 </body>
 </html>

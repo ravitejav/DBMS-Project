@@ -12,7 +12,12 @@
   <a href="#">Hello, {{ name }}</a>
   <a href="/log/std/comp">Register Compliant</a>
   <a href="/log/std/payment">Payment</a>
+  <a href="/log/std/viewcomp">View Complaints</a>
+  <a href="/log/std/change">change Password</a>
   <a href="/log/std/logout">log out</a>
+{% if fee %}
+  <div><a href="#">You need to pay, {{ fee }}</a></div>
+{% endif %}
 </div>
 <h3>Complaint Form</h3>
 <center>
