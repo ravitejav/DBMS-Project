@@ -1,4 +1,5 @@
 from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
@@ -147,6 +148,7 @@ def addstddb(request):
         newuser.email = str(request.POST.get('email'))
         newuser.fee = int(request.POST.get('fee'))
         newuser.rank = int(request.POST.get('rank'))
+        newuser.admission_number = str(request.POST.get('add_no'))
         newuser.gender = str(request.POST.get('gender'))
         newuser.Temp_address = str(request.POST.get('temp_add'))
         newuser.per_address = str(request.POST.get('per_add'))
@@ -192,7 +194,6 @@ def updatestddone(request):
         newuser.Temp_address = str(request.POST.get('temp_add'))
         newuser.per_address = str(request.POST.get('per_add'))
         newuser.studying_year = str(request.POST.get('a_year'))
-        newuser.pass_word = str(request.POST.get('passa'))
         if (newuser.save()):
             return render(request, 'login/addstd.html', {'name': name})
         else:
@@ -221,6 +222,7 @@ def addnotification(request):
         newnoti.posted_by_id = Defuser.objects.only('user_id').get(user_id=row[0][2])
         newnoti.head = str(request.POST.get('subject'))
         newnoti.data =str(request.POST.get('noti'))
+        newnoti.save()
         return render(request, 'login/addnoti.html', {'error_message':"", 'name': request.session.get("username")})
     else:
         return render(request, 'login/admin.html')

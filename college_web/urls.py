@@ -20,4 +20,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^log/', include('login.urls')),
+    #url(r'^$', views.redirect, name='redirect'),
 ]
