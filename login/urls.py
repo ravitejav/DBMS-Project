@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^admin/login/fee$', views.fee, name='fee'),
     url(r'^admin/solve$', views.updatecompsol, name='updatecompsol'),
     url(r'^admin/feefetch$', views.feefetch, name='feefetch'),
+    url(r'^admin/feefetchsem$', views.feefetchsem, name='feefetchsem'),
     url(r'^admin/addstd$', views.addstddb, name='addstddb'),
     url(r'^admin/updatesearch$', views.upsearch, name='upsearch'),
     url(r'^admin/updatestd$', views.updatestddone, name='updatestddone'),

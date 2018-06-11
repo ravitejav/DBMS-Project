@@ -264,6 +264,28 @@ def feefetch(request):
     else:
         return render(request, 'login/admin.html')
 
+
+def feefetchsem(request):
+    if (request.session['username']):
+        password = request.session['passa']
+        name = request.session['username']
+    else:
+        return render(request, 'login/admin.html')
+    cursor = connection.cursor()
+    query = "SELECT * FROM login_defuser WHERE user_name='" + name + "' AND pass_word='" + password + "'"
+    cursor.execute(query)
+    row = cursor.fetchall()
+    count = int(len(row))
+    if (count == 1):
+        query1 = "SELECT * FROM login_fee_pay,login_user,login_paying WHERE trans_id in (SELECT pay_id_id FROM login_paying WHERE std_id_id in (SELECT reg_no FROM login_user WHERE sem=" + str(request.POST.get('search')) + " )) and login_paying.pay_id_id=login_fee_pay.trans_id and login_paying.std_id_id=login_user.reg_no"
+        cursor2 = connection.cursor()
+        cursor2.execute(query1)
+        row2 = cursor2.fetchall()
+        return render(request, 'login/feefetchsem.html', {'name': request.session.get("username"), 'data':row2})
+    else:
+        return render(request, 'login/admin.html')
+
+
 def logout(request):
     del request.session['username']
     del request.session['passa']
@@ -388,7 +410,14 @@ def dopayment(request):
     row = cursor.fetchall()
     count = int(len(row))
     if (count == 1):
-        return render(request, 'login/payment.html', {'name': row[0][0], 'fee':row[0][12]})
+        if 'transid' in request.session:
+            var=request.session['transid']
+            del request.session['transid']
+            var1=request.session['amt1']
+            del request.session['amt1']
+            return render(request, 'login/payment.html', {'name': row[0][0], 'fee':row[0][12], 'trans': var, 'amt11':var1})
+        else:
+           return render(request, 'login/payment.html', {'name': row[0][0], 'fee': row[0][12]})
     else:
         return HttpResponseRedirect("/log")
 
@@ -414,6 +443,8 @@ def donepayment(request):
         query = "UPDATE login_user SET fee=" + str(int(row[0][12])-int(newfee.fee_paid)) + " WHERE reg_no='" + row[0][9]+ "'"
         cursor1 = connection.cursor()
         cursor1.execute(query)
+        request.session['amt1']=str(request.POST.get('amt'))
+        request.session['transid']=var;
         return render(request, 'login/paying.html', {'var':row[0][9], 'fee':row[0][12]})
     else:
         return HttpResponseRedirect("/log")
@@ -427,7 +458,7 @@ def stdcomp(request):
     row = cursor.fetchall()
     count = int(len(row))
     if (count == 1):
-        query1 = "SELECT match_id_id,regno_id,add_date,status,explain,about,sub,comp_id FROM login_compliant,login_comp_match,login_user WHERE reg_no='15GAEC9054' AND match_id_id=comp_id AND status!='Solved'"
+        query1 = "SELECT match_id_id,regno_id,add_date,status,explain,about,sub,comp_id FROM login_compliant,login_comp_match,login_user WHERE reg_no='"+name+"' AND match_id_id=comp_id AND status!='Solved'"
         cursor2 = connection.cursor()
         cursor2.execute(query1)
         row2 = cursor2.fetchall()

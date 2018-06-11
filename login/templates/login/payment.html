@@ -19,6 +19,10 @@
   <div><a href="#">You need to pay, {{ fee }}</a></div>
 {% endif %}
 </div>
+{% if trans %}
+  <a href="#">You successfully paid {{ amt11 }} with transaction id is {{ trans }}, still you need to pay {{ fee }}</div>
+{% endif %}
+
 <center style="margin-top:100px">
   <form style="max-width:800px" action="/log/std/paymentdone" method="POST">
 {% csrf_token %}

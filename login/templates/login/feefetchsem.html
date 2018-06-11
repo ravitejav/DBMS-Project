@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Fee Check</title>
+    <title>Fee Details</title>
     {% load staticfiles %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'login/style.css' %}" />
 </head>
 <body>
@@ -20,15 +19,20 @@
             <li><a href="#" class="text-right">Hello, {{ name }}</a></li>
         </ul>
     </nav>
-    <form class="example" action="/log/admin/feefetch" method="POST" style="padding:100px">
-  {% csrf_token %}
-    <input type="text" placeholder="Please enter student register id to get his fee details..." name="search" required="required">
-    <button type="submit"><i class="fa fa-search"></i></button>
-  </form>
-<form class="example" action="/log/admin/feefetchsem" method="POST" style="padding:100px">
-  {% csrf_token %}
-  <input type="text" placeholder="Please enter semester to get fee details..." name="search" required="required">
-  <button type="submit"><i class="fa fa-search"></i></button>
-  </form>
+    {{ row2 }}
+    <center>
+{% if data %}
+    <table class="table table-dark" style="background-color:silver;max-width:750px;">
+        <thead><tr scope="col"><th>Transaction ID</th><th scope="col">Register Number</th><th scope="col">Branch</th><th scope="col">Paid amount</th><th scope="col">Paid Time</th></tr></thead>
+        <tbody>
+    {% for x in data %}
+        <tr><td>{{ x.2 }}</td><td>{{ x.13 }}</td><td>{{ x.9 }}</td><td>{{ x.1 }}</td><td>{{ x.0 }}</td></tr>
+    {% endfor %}
+        </tbody>
+    </table>
+  </center>
+{% else %}
+  <p style="padding:100px"><strong><h2> Didn't have any transcations<h2> </strong> </p>
+{% endif %}
 </body>
 </html>
